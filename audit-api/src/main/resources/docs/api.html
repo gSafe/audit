@@ -1,0 +1,132 @@
+<!--
+  #%L
+  audit-api
+  %%
+  Copyright (C) 2013 gSafe
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  #L%
+  -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>API - audit</title>
+        
+        <link href="styles/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="styles/doc2.css" rel="stylesheet"></link>
+    </head>
+    
+    <body>
+        <div class="row-fluid">
+            <div class="span2">
+                <a href="index.html"><img id="novapost" src="images/novapost_logo.png" width="200" /></a>
+            </div>
+            <header class="span9">
+                <h1>
+                    AUDIT WEB SERVICE
+                </h1>
+            </header>
+        </div>
+        
+        
+        <div class="row-fluid">
+            <div class="span2">
+                <div id="table_of_content">
+                    <h2>Table of content</h2>
+                    <ul>    
+                        <li><a href="#post_event">Post events</a></li>
+                        <li><a href="#get_logs">Get logs</a></li>
+                    </ul>
+                </div><!-- table_of_content-->
+            </div>
+            
+            <div class="span9 method">
+                <h2 id="post_event">Post events</h2>
+                <p>Logger des events :</p>
+                <div class="row-fluid">
+                    <div class="span6">
+                        <div class="url"><div class="post">POST</div><div class="path">/events</div></div>
+                        <h3>Parameters:</h3>
+                        <pre>
+[{                                  |
+  "actor": "l'utilisateur",         | string, mandatory
+  "action": "l'action",             | string, mandatory 
+  "resource": {                     | structure libre, mandatory
+    "key1": "value1",               |
+    "key2": "value2",               |
+  },                                |
+  "desc": "description"             | string
+}, ...]                             |
+                        </pre>
+                    </div>
+                    <div class="span6">
+                        <h3>Responses:</h3>
+                        <ul>
+                            <li><strong>201</strong> - Created</li>
+                            <li><strong>400</strong> - Bad Request</li>
+                        </ul>
+                        
+                    </div>
+                </div>
+                <h3>Examples:</h3>
+                Journaliser le téléchargement de l'objet numérique 42, par l'application Novapost.
+                <pre><code>curl -i -XPOST -H'Content-type:application/json' http://audit.gsafe.net:8070/events --data '[{"actor": "application_novapost", "action": "download_document", "resource": {"on": "objet_num_42"}]'
+</code></pre>
+                Journaliser la demande de listing des objets numériques du coffre 33 par l'utilisateur 9157.
+                <pre><code>curl -i -XPOST -H'Content-type:application/json' http://audit.gsafe.net:8070/events --data '[{"actor": "user9157", "action": "list_safe_objects", "resource": {"coffre": "33", "container": "/"}}]'
+</code></pre>
+            </div>
+        </div>
+        
+        
+        <div class="row-fluid">
+            <div class="span9 offset2 method">
+                <h2 id="get_logs">Récupérer un journal</h2>
+                <p>Récupérer un journal répondant aux critères.</p>
+                <div class="row-fluid">
+                    <div class="span6">
+                        <div class="url"><div class="get">GET</div><div class="path">/events</div></div>
+                        <h3>Query parameters:</h3>
+                        <ul>
+                            <li>actor: string</li>
+                            <li>action: string</li>
+                            <li>resource: string</li>
+                            <li>date_from: string</li>
+                            <li>date_to: string</li>
+                            <li>page: int</li>
+                        </ul>
+                        <p>Au moins un paramètre est obligatoire pour récupérer la liste d'évènements.</p>
+                        <p>Les résultats sont retournés par ordre chronologique.</p>
+                    </div>
+                    <div class="span6">
+                        <h3>Responses:</h3>
+                        <ul>
+                            <li><strong>200</strong> - OK + JSON content</li>
+                            <li><strong>400</strong> - Bad Request</li>
+                        </ul>
+                        
+                    </div>
+                </div>
+                <h3>Examples:</h3>
+                Récupérer les évènements effectués par novapost sur l’objet 54 depuis le 31 décembre 2010
+                <pre><code>curl ­XGET ­H'Content­type:application/json' http://audit.gsafe.net:8070/events?actor=novapost&resource=objet_numerique_54&date_from=2010-31-12</code></pre>
+                Récupérer les demandes de téléchargement sur des documents inexistants depuis le 20 avril 2011
+                <pre><code>curl ­XGET ­H'Content­type:application/json' http://localhost:8080/events?action=download_not_found&date_from=2011-20-04</code></pre>
+                
+            </div>
+        </div>
+        
+    </body>
+</html>

@@ -1,0 +1,8 @@
+http:
+  port: 8070
+  adminPort: 8071
+
+  
+mongoDB:
+  host: vagrant
+  dbName: audit

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="5 minutes">
+ 
+    <!-- APPENDER CONSOLE -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>%d{HH:mm:ss} %highlight(%-5level): %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+   
+   <!-- APPENDER SENTRY -->
+    <!--appender name="SENTRY" class="net.kencochrane.raven.logback.SentryAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <sentryDsn> =====> TODO <====== </sentryDsn>
+        <encoder>
+            <pattern>%d{HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender-->
+   
+   <!-- APPENDER FILE --> 
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	   <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+		<file>/var/novapost/audit/logs/output.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>/var/novapost/flow/logs/output.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>70</maxHistory>
+		</rollingPolicy>
+		<encoder>
+            <pattern>%d{HH:mm:ss} %highlight(%-5level): %logger{36} - %msg%n</pattern>
+        </encoder>
+	</appender>
+  	
+    <root level="debug">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+        <!-- ====> TODO <===== -->
+        <!--appender-ref ref="SENTRY" /-->
+    </root>
+    
+</configuration>
